@@ -35,22 +35,18 @@ def border(A, B, n, m, x, y, g1, g2, g3, g4):
                 A[k3][k3] = 1
                 code = compile(g1, "<string>", "eval")
                 B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
-                #B[k3] = y[j]
             if i == n - 1:
                 A[k3][k3] = 1
                 code = compile(g2, "<string>", "eval")
                 B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
-                #B[k3] = y[j] + 10
             if j == 0:
                 A[k3][k3] = 1
                 code = compile(g3, "<string>", "eval")
                 B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
-                #B[k3] = x[i]
             if j == m - 1:
                 A[k3][k3] = 1
                 code = compile(g4, "<string>", "eval")
                 B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
-                #B[k3] = x[i] + 10
     return A, B
 
 
@@ -98,10 +94,12 @@ for i in range(n):
         Uij[i].append(U[k])
         k += 1
 
-# Y = [y[i] for i in range(len(y))]
 
 fig = plt.figure()
 ax = plt.axes(projection='3d')
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_zlabel("U")
 
 for i in range(len(y)):
     X = np.array(x)
@@ -114,4 +112,8 @@ for i in range(len(x)):
     X = np.array([x[i] for j in range(len(x))])
     Z = np.array(U[0 + i * len(y):len(y) + len(y) * i])
     ax.plot3D(X, Y, Z, 'b')
+
+print(x)
+print(y)
+print(U)
 plt.show()
