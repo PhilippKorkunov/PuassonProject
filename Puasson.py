@@ -26,23 +26,31 @@ def two_dem_to_one_dem(i, j, n):
     return j * n + i
 
 
-def border(A, B, n, m, x, y):
+def border(A, B, n, m, x, y, g1, g2, g3, g4):
     k3 = 0
     for j in range(0, m):
         for i in range(0, n):
             k3 = two_dem_to_one_dem(i, j, n)
             if i == 0:
                 A[k3][k3] = 1
-                B[k3] = y[j]
+                code = compile(g1, "<string>", "eval")
+                B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
+                #B[k3] = y[j]
             if i == n - 1:
                 A[k3][k3] = 1
-                B[k3] = y[j] + 10
+                code = compile(g2, "<string>", "eval")
+                B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
+                #B[k3] = y[j] + 10
             if j == 0:
                 A[k3][k3] = 1
-                B[k3] = x[i]
+                code = compile(g3, "<string>", "eval")
+                B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
+                #B[k3] = x[i]
             if j == m - 1:
                 A[k3][k3] = 1
-                B[k3] = x[i] + 10
+                code = compile(g4, "<string>", "eval")
+                B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]})
+                #B[k3] = x[i] + 10
     return A, B
 
 
@@ -60,9 +68,9 @@ def inside(A, B, n, m, x, y, dx, dy, sigma):
             A[k3][k3] = -2 / (dx ** 2) - 2 / (dy ** 2)
             A[k3][k4] = 1 / (dy ** 2)
             A[k3][k5] = 1 / (dy ** 2)
-            #code = compile(sigma, "<string>", "eval")
-            #B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]}) / (-8.85418781762039 * (10 ** (-12)))
-            B[k3] = -(2.71828182846 ** (-x[i] ** 2 - y[j] ** 2)) / (8.85418781762039 * (10 ** (-12)))
+            code = compile(sigma, "<string>", "eval")
+            B[k3] = eval(code, {"np": np, "x": x[i], "y": y[j]}) / -8.85418781762039 * (10 ** (-12))
+            #B[k3] = -(2.71828182846 ** (-x[i] ** 2 - y[j] ** 2)) / 8.85418781762039 * 10 ** (-12)
     return A, B
 
 
@@ -79,7 +87,7 @@ x = [i * dx + x1 for i in range(0, n)]
 y = [i * dy + y1 for i in range(0, m)]
 
 A, B = inside(A, B, n, m, x, y, dx, dy, sigma)
-A, B = border(A, B, n, m, x, y)
+A, B = border(A, B, n, m, x, y, g1, g2, g3, g4)
 U = solve(A, B)
 
 Uij = []
